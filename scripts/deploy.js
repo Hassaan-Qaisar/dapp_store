@@ -2,7 +2,7 @@ const hre = require("hardhat")
 const { items } = require("../frontend/src/items.json")
 
 const tokens = (n) => {
-  return ethers.utils.parseUnits(n.toString(), 'ether')
+  return ethers.parseUnits(n.toString(), 'ether')
 }
 
 async function main() {
@@ -12,7 +12,7 @@ async function main() {
   // Deploy Dappazon
   const DappStore = await hre.ethers.getContractFactory("DappStore")
   const dapp = await DappStore.deploy()
-  await dapp.deployed()
+  // await dapp.deployed()
 
   console.log(`Deployed Contract at: ${dapp.address}\n`)
 
