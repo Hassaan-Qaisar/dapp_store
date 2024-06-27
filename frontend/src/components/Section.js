@@ -1,6 +1,7 @@
 import React from 'react'
-import { ethers } from 'ethers'
+// import { ethers } from 'ethers'
 import { Rating } from './Rating'
+const ethers = require("ethers");
 
 const Section = ({ title, items, togglePop }) => {
   return (

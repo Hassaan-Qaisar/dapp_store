@@ -1,11 +1,14 @@
 import { useEffect, useState } from "react";
-import { ethers } from "ethers";
+// import { ethers } from "ethers";
+
 import "./App.css";
 import config from "./config.json";
-import dapp from "./abis.json";
+import Dapp from "./abis.json";
 
 import { Navigation } from "./components/Navigation";
 import Section from "./components/Section";
+
+const ethers = require("ethers");
 
 function App() {
   const [account, setAccount] = useState(null);
@@ -15,10 +18,45 @@ function App() {
   const [item, setItem] = useState({});
   const [toggle, setToggle] = useState(false);
 
+  const [provider, setProvider] = useState(null);
+  const [dapp, setDapp] = useState(null);
+
   const togglePop = (item) => {
     setItem(item);
     toggle ? setToggle(false) : setToggle(true);
   };
+
+  const loadBlockchainData = async () => {
+    const provider = new ethers.providers.Web3Provider(window.ethereum);
+    setProvider(provider);
+    const network = await provider.getNetwork();
+
+    const dapp = new ethers.Contract(
+      config[network.chainId].dappazon.address,
+      Dapp,
+      provider
+    );
+    setDapp(dapp);
+
+    const items = [];
+
+    for (var i = 0; i < 9; i++) {
+      const item = await dapp.items(i + 1);
+      items.push(item);
+    }
+
+    const electronics = items.filter((item) => item.category === "electronics");
+    const clothing = items.filter((item) => item.category === "clothing");
+    const toys = items.filter((item) => item.category === "toys");
+
+    setElectronics(electronics);
+    setClothing(clothing);
+    setToys(toys);
+  };
+
+  useEffect(() => {
+    loadBlockchainData();
+  }, []);
 
   return (
     <div>
