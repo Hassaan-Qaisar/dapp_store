@@ -7,6 +7,7 @@ import Dapp from "./abis.json";
 
 import { Navigation } from "./components/Navigation";
 import Section from "./components/Section";
+import Product from "./components/Product";
 
 const ethers = require("ethers");
 
@@ -76,6 +77,16 @@ function App() {
             togglePop={togglePop}
           />
           <Section title={"Toys & Gaming"} items={toys} togglePop={togglePop} />
+
+          {toggle && (
+            <Product
+              item={item}
+              provider={provider}
+              account={account}
+              dapp={dapp}
+              togglePop={togglePop}
+            />
+          )}
         </>
       )}
     </div>

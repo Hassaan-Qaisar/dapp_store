@@ -5,12 +5,12 @@ import { ethers } from "ethers";
 import { Rating } from "./Rating";
 import close from "../assets/close.svg";
 
-export const Product = ({ item, provider, account, dappazon, togglePop }) => {
+export const Product = ({ item, provider, account, dapp, togglePop }) => {
   const [order, setOrder] = useState(null);
   const [hasBought, setHasBought] = useState(false);
 
   const fetchDetails = async () => {
-    const events = await dappazon.queryFilter("Buy");
+    const events = await dapp.queryFilter("Buy");
     const orders = events.filter(
       (event) =>
         event.args.buyer === account &&
@@ -19,7 +19,7 @@ export const Product = ({ item, provider, account, dappazon, togglePop }) => {
 
     if (orders.length === 0) return;
 
-    const order = await dappazon.orders(account, orders[0].args.orderId);
+    const order = await dapp.orders(account, orders[0].args.orderId);
     setOrder(order);
   };
 
@@ -27,7 +27,7 @@ export const Product = ({ item, provider, account, dappazon, togglePop }) => {
     const signer = await provider.getSigner();
 
     // Buy item...
-    let transaction = await dappazon
+    let transaction = await dapp
       .connect(signer)
       .buy(item.id, { value: item.cost });
     await transaction.wait();
@@ -38,6 +38,7 @@ export const Product = ({ item, provider, account, dappazon, togglePop }) => {
   useEffect(() => {
     fetchDetails();
   }, [hasBought]);
+  
   return (
     <div className="product">
       <div className="product__details">
